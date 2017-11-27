@@ -10,10 +10,10 @@ use Yii;
  * @property integer $id
  * @property string $username
  * @property string $password
- * @property string $endereco
+ * @property string $email
+ * @property string $nome_completo
  * @property double $latitude
  * @property double $longitude
- * @property string $nome
  */
 class Usuario extends \yii\db\ActiveRecord
 {
@@ -31,11 +31,12 @@ class Usuario extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'password', 'endereco', 'latitude', 'longitude', 'nome'], 'required'],
-            [['password'], 'string'],
+            [['username', 'password'], 'required'],
             [['latitude', 'longitude'], 'number'],
-            [['username'], 'string', 'max' => 50],
-            [['endereco', 'nome'], 'string', 'max' => 255],
+            [['username'], 'string', 'max' => 16],
+            [['password'], 'string', 'max' => 32],
+            [['email'], 'string', 'max' => 255],
+            [['nome_completo'], 'string', 'max' => 45],
         ];
     }
 
@@ -45,13 +46,13 @@ class Usuario extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'username' => Yii::t('app', 'Username'),
-            'password' => Yii::t('app', 'Password'),
-            'endereco' => Yii::t('app', 'Endereco'),
-            'latitude' => Yii::t('app', 'Latitude'),
-            'longitude' => Yii::t('app', 'Longitude'),
-            'nome' => Yii::t('app', 'Nome'),
+            'id' => 'ID',
+            'username' => 'Username',
+            'password' => 'Password',
+            'email' => 'Email',
+            'nome_completo' => 'Nome Completo',
+            'latitude' => 'Latitude',
+            'longitude' => 'Longitude',
         ];
     }
 }

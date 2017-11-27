@@ -1,0 +1,42 @@
+image: registry.aliyuncs.com/larryli/yii2-test:5.5
+
+cache:
+  key: "$CI_BUILD_NAME"
+  paths:
+    - vendor/
+
+before_script:
+  - composer self-update --clean-backups
+  - composer install --dev --prefer-dist --no-interaction --no-progress
+  - sed -i "s/'cookieValidationKey' => ''/'cookieValidationKey' => 'testkey'/" config/web.php
+  - cd tests
+  - codecept build
+  - cp -f codeception/config/docker-mysql.db.php codeception/config/db.php 
+  - cd codeception/bin && php yii migrate --interactive=0
+  - cd ../../..
+
+.test: &test
+  script:
+    - |
+      cd web
+      php -S localhost:8080 > /dev/null 2>&1 &
+      cd ../tests
+      codecept run
+  stage: test
+  services:
+    - mysql
+  variables:
+    MYSQL_DATABASE: yii-bd
+    MYSQL_ROOT_PASSWORD: mysql
+
+test:php:5.5:
+  image: registry.aliyuncs.com/larryli/yii2-test:5.5
+  <<: *test
+
+test:php:5.6:
+  image: registry.aliyuncs.com/larryli/yii2-test:5.6
+  <<: *test
+
+test:php:7.0:
+  image: registry.aliyuncs.com/larryli/yii2-test:7.0
+  <<: *test

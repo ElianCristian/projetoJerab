@@ -52,6 +52,16 @@ class SiteController extends Controller
             ],
         ];
     }
+	
+	public function beforeAction($action) {
+
+		if (Yii::$app->user->isGuest && Yii::$app->controller->action->id != "login") {
+			Yii::$app->user->loginRequired();
+		}
+		//something code right here if user valid
+		return true;
+			
+	}
 
     /**
      * Displays homepage.
