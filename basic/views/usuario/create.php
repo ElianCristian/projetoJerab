@@ -139,7 +139,7 @@ function myMap() {
 	//======
 }
 
-
+//pega a localização do endereco
 function geocodeAddress(address) {
 
     geocoder.geocode({'address': address}, function(results, status) {
@@ -153,6 +153,7 @@ function geocodeAddress(address) {
     });
 }
 
+// animacao da seta de localizacao
 function toggleBounce() {
 
     if(marcador.getAnimation() !== null) marcador.setAnimation(null);
