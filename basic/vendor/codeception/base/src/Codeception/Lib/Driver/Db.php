@@ -87,7 +87,7 @@ class Db
     public function getDb()
     {
         $matches = [];
-        $matched = preg_match('~dbname=(.*);~s', $this->dsn, $matches);
+        $matched = preg_match('~dbname=(\w+)~s', $this->dsn, $matches);
         if (!$matched) {
             return false;
         }
@@ -287,5 +287,23 @@ class Db
         $this->primaryKeys = [];
 
         return empty($this->primaryKeys);
+    }
+    
+    public function update($table, array $data, array $criteria)
+    {
+        if (empty($data)) {
+            throw new \InvalidArgumentException(
+                "Query update can't be prepared without data."
+            );
+        }
+        
+        $set = [];
+        foreach ($data as $column => $value) {
+            $set[] = $this->getQuotedName($column)." = ?";
+        }
+
+        $where = $this->generateWhereClause($criteria);
+
+        return sprintf('UPDATE %s SET %s %s', $this->getQuotedName($table), implode(', ', $set), $where);
     }
 }

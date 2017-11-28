@@ -21,7 +21,6 @@ class PhpBrowserTest extends TestsForBrowsers
         $url = 'http://localhost:8000';
         $this->module->_setConfig(array('url' => $url));
         $this->module->_initialize();
-        $this->module->_cleanup();
         $this->module->_before($this->makeTest());
         if (class_exists('GuzzleHttp\Url')) {
             $this->history = new \GuzzleHttp\Subscriber\History();
@@ -271,6 +270,13 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->seeCurrentUrlEquals('/location_201');
     }
 
+    public function testRedirectToAnotherDomainUsingSchemalessUrl()
+    {
+        $this->module->amOnUrl('http://httpbin.org/redirect-to?url=//codeception.com/');
+        $currentUrl = $this->module->client->getHistory()->current()->getUri();
+        $this->assertSame('http://codeception.com/', $currentUrl);
+    }
+
     public function testSetCookieByHeader()
     {
         $this->module->amOnPage('/cookies2');
@@ -278,14 +284,6 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->seeCookie('a');
         $this->assertEquals('b', $this->module->grabCookie('a'));
         $this->module->seeCookie('c');
-    }
-
-    public function testUrlSlashesFormatting()
-    {
-        $this->module->amOnPage('somepage.php');
-        $this->module->seeCurrentUrlEquals('/somepage.php');
-        $this->module->amOnPage('///somepage.php');
-        $this->module->seeCurrentUrlEquals('/somepage.php');
     }
 
     public function testSettingContentTypeFromHtml()
@@ -370,6 +368,9 @@ class PhpBrowserTest extends TestsForBrowsers
 
     public function testCurlSslOptions()
     {
+        if (getenv('WERCKER_ROOT')) {
+            $this->markTestSkipped('Disabled on Wercker CI');
+        }
         $this->module->_setConfig(array(
             'url' => 'https://google.com',
             'curl' => array(
@@ -674,5 +675,16 @@ HTML
         ;
         $sourceActual = $this->module->grabPageSource();
         $this->assertXmlStringEqualsXmlString($sourceExpected, $sourceActual);
+    }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/4383
+     */
+    public function testSecondAmOnUrlWithEmptyPath()
+    {
+        $this->module->amOnUrl('http://localhost:8000/info');
+        $this->module->see('Lots of valuable data here');
+        $this->module->amOnUrl('http://localhost:8000');
+        $this->module->dontSee('Lots of valuable data here');
     }
 }

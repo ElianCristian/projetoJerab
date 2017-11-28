@@ -2,12 +2,18 @@
 
 namespace app\controllers;
 
+use app\models\Usuario as Usuario;
+
+
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+
+//use mPDF;  Note this line is Commented out
+use mPDF;
 
 class SiteController extends Controller
 {
@@ -131,5 +137,25 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+	
+	public function actionPdf() {
+ 
+       $mpdf = new \Mpdf\Mpdf();
+		$registros = Usuario::find()->all();
+		$total = count($registros);
+		foreach($registros as $row)
+        {
+            $mpdf->WriteHTML ('Nome Completo: '.$row['nome_completo'].'</br>');
+			$mpdf->WriteHTML ('username: '.$row['username'].'</br>');
+            $mpdf->WriteHTML ('senha: '.$row['password'].'</br>');
+            $mpdf->WriteHTML ('email: '.$row['email'].'</br>');
+            $mpdf->WriteHTML ('<br/><br/>');
+        }
+        
+		
+	  // $mpdf->WriteHTML('<h1>Hello world!</h1>');
+	   $mpdf->Output();
+        exit;
     }
 }
