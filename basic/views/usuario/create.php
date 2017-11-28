@@ -21,10 +21,19 @@ $this->params['breadcrumbs'][] = $this->title;
 
 </div>
 
+
+
+
+
+
+
+
+
+
 	<div id="googleMap" style="width:100%;height:400px;"></div>
 
 <script>
-var mapa, marcador, geocoder;
+var mapa, marcador, geocoder, infoWindow;
 
 function myMap() {
 
@@ -36,6 +45,32 @@ function myMap() {
         zoom: 16
     });
 
+	
+	//
+	
+	
+	
+	    infoWindow = new google.maps.InfoWindow;
+
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Location found.');
+            infoWindow.open(map);
+            mapa.setCenter(pos);
+          }, function() {
+            handleLocationError(true, infoWindow, mapa.getCenter());
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, infoWindow, mapa.getCenter());
+        }
 
 //var map=new google.maps.Map(document.getElementById("googleMap"),mapa);
 
@@ -47,6 +82,11 @@ function myMap() {
     });
 
     marcador.addListener('click', toggleBounce);
+	marcador.addListener('position_changed', function(){
+		
+		document.getElementById('usuario-latitude').value = marcador.getPosition().lat();
+		document.getElementById('usuario-longitude').value = marcador.getPosition().lng();
+	});
 
     var input = document.getElementById('pac-input');
     var searchBox = new google.maps.places.SearchBox(input);
@@ -99,19 +139,9 @@ function toggleBounce() {
 }
 
 
-google.maps.event.trigger(point, "click");
 
-for (var i = 0; i < 5; i++) {
-    var pointString = '<li><a href="#" class="openPoint" id="point' + i + '" pointID="' + i + '">' + myPoints[i][0] + ' - ' + myPoints[i][1] + ' Miles Away</a></li>';
-    $('#pointsGoHere').append(pointString);
-}
-$('.openPoint').each(function () {
-    $(this).click(function (e) {
-        e.preventDefault();
-        var pointID = parseInt($(this).attr('pointID'));
-        google.maps.event.trigger(myPoints[pointID][4], "click");
-    });
-});
+
+
 </script>
 
  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbmnAvnVUjgvnBE5vhHwmJR3y8RcN5v_4&callback=myMap"async defer></script>
