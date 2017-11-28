@@ -18,6 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a(Yii::t('app', 'Create Usuario'), ['create'], ['class' => 'btn btn-success']) ?>
+		<?= Html::a('Exportar base para PDF', ['/usuario/pdf'], ['class'=>'btn btn-primary']) ?>
     </p>
 	
 

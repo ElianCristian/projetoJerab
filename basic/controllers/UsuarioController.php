@@ -9,6 +9,9 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+//use mPDF;  Note this line is Commented out
+use mPDF;
+
 /**
  * UsuarioController implements the CRUD actions for Usuario model.
  */
@@ -130,5 +133,25 @@ class UsuarioController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+	
+	public function actionPdf() {
+ 
+       $mpdf = new \Mpdf\Mpdf();
+		$registros = Usuario::find()->all();
+		$total = count($registros);
+		foreach($registros as $row)
+        {
+            $mpdf->WriteHTML ('Nome Completo: '.$row['nome_completo'].'</br>');
+			$mpdf->WriteHTML ('username: '.$row['username'].'</br>');
+            $mpdf->WriteHTML ('senha: '.$row['password'].'</br>');
+            $mpdf->WriteHTML ('email: '.$row['email'].'</br>');
+            $mpdf->WriteHTML ('<br/><br/>');
+        }
+        
+		
+	  // $mpdf->WriteHTML('<h1>Hello world!</h1>');
+	   $mpdf->Output();
+        exit;
     }
 }
