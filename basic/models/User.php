@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+//add a biblioteca para manipular melhor a classe criada e linkada com BD - Mysql
 use app\models\Usuario as Usuario;
 
 class User extends \yii\base\Object implements \yii\web\IdentityInterface
@@ -11,11 +12,11 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
     public $authKey;
     public $accessToken;
 	
-	
- public $email;
- public $nome_completo;
- public $latitude;
- public $longitude;
+	//adiciona os campos do BD
+	public $email;
+	public $nome_completo;
+	public $latitude;
+	public $longitude;
 
 //    private static $users = [
 //        '100' => [
@@ -76,6 +77,8 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
 //                return new static($user);
 //            }
 //        }
+
+		//busca direto do BD ao inves do vetor - default do Yii
         $user = Usuario::find()->where(['username'=> $username])->one();
 
         if ($user){
@@ -117,6 +120,7 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      */
     public function validatePassword($password)
     {
+		//codifica a senha
         return $this->password == sha1($password);
     }
 }

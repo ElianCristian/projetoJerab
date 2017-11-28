@@ -12,7 +12,7 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 
-//use mPDF;  Note this line is Commented out
+//use mPDF;  chamada para utilizacao do plugin baixado
 use mPDF;
 
 class SiteController extends Controller
@@ -139,11 +139,13 @@ class SiteController extends Controller
         return $this->render('about');
     }
 	
+	// Chamada para conversao em PDF, usando o mPDF
 	public function actionPdf() {
  
        $mpdf = new \Mpdf\Mpdf();
 		$registros = Usuario::find()->all();
 		$total = count($registros);
+		
 		foreach($registros as $row)
         {
             $mpdf->WriteHTML ('Nome Completo: '.$row['nome_completo'].'</br>');

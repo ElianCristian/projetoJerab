@@ -1,13 +1,21 @@
 # projetoJerab
 Desafio para o processo seletivo 
-
+===============================================================================================================
 Autor: Elian Cristian
-
+===============================================================================================================
 PLUGINS utilizados: mPDF
 API KEy: GoogleMaps
 SGBD: MySql
 Modelo BD: ./modelo/
+===============================================================================================================
+Instrucoes para utilizacao
+ - Alterar o arquivo do bd em ../config/db.php - adicionar o nome do banco, usuario e senha do PHPMyAdmin
+ - Cadastrar um novo usuario para poder realizar o login: http://localhost/projeto/projetoJerab/basic/web/index.php?r=usuario
+ - Pode ser que seja necessário registrar a aplicacao nas APIs do google, ver mais em: https://developers.google.com/maps/documentation/javascript/examples/
+ - Instalar o mpdf, usando composer, ver mais em https://github.com/mpdf/mpdf
 
+
+===============================================================================================================
 Requisitos para desenvolvimento:
 
 ·        Sistema Web desenvolvido em Linguagem PHP;
@@ -39,3 +47,4 @@ Requisitos do sistema:
 ·        Tela para Visualização no Mapa de todos os Usuários Cadastrados (latitude/longitude da residência);
 
 ·        Função ao clicar no Usuário (marcador) do Mapa, abrir detalhes dos dados cadastrados - PENDENTE.
+===============================================================================================================

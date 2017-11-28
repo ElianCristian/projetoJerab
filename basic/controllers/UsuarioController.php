@@ -66,9 +66,10 @@ class UsuarioController extends Controller
      */
     public function actionCreate()
     {
+		//modificacao para buscar todos os registros no BD
 		$registros = Usuario::find()->all();
 		$total = count($registros);
-		
+		//checa o numero de registros existentes - count - e e nao deixa o usuario cadastrar mais nada, caso seja maior que 10 registros
 		if ($total > 10){
 			Yii::$app->session->setFlash('error', 'Nao pode salvar mais de 10 registros');
 			return $this->redirect(['index']);
@@ -135,8 +136,10 @@ class UsuarioController extends Controller
         }
     }
 	
+	//conversao dos registros para PDF
+	// algoritmo: checa todos os registros na tabela
+	//conta os registros e itera para escrever o PDF
 	public function actionPdf() {
- 
        $mpdf = new \Mpdf\Mpdf();
 		$registros = Usuario::find()->all();
 		$total = count($registros);
@@ -148,9 +151,7 @@ class UsuarioController extends Controller
             $mpdf->WriteHTML ('email: '.$row['email'].'</br>');
             $mpdf->WriteHTML ('<br/><br/>');
         }
-        
-		
-	  // $mpdf->WriteHTML('<h1>Hello world!</h1>');
+        //fecha a aplicacao
 	   $mpdf->Output();
         exit;
     }

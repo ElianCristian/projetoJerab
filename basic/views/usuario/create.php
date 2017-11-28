@@ -29,27 +29,26 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 
-
-	<div id="googleMap" style="width:100%;height:400px;"></div>
+<!----div do mapa--->
+<div id="googleMap" style="width:100%;height:400px;"></div>
 
 <script>
 var mapa, marcador, geocoder, infoWindow;
+//funcao que carrega o mapa e inicializa os pontos (places) com os endereços. 
+//OBS - marcador apenas para recuperar a latitude e longitude - NECESSARIO A Key do GMaps 
 
 function myMap() {
-
-
+	//carrega o mapa
   geocoder = new google.maps.Geocoder();
 
+	//carrega o mapa na div, em ponto especifico - Manaus - AM
     mapa = new google.maps.Map(document.getElementById('googleMap'), {
         center: {lat: -3.1, lng: -60},
         zoom: 16
     });
 
 	
-	//
-	
-	
-	
+	//carregar as informacoes dos lugares (places) do mapa
 	    infoWindow = new google.maps.InfoWindow;
 
         // Try HTML5 geolocation.
@@ -61,7 +60,7 @@ function myMap() {
             };
 
             infoWindow.setPosition(pos);
-            infoWindow.setContent('Location found.');
+            infoWindow.setContent('Localização não encontrada.');
             infoWindow.open(map);
             mapa.setCenter(pos);
           }, function() {
@@ -72,8 +71,7 @@ function myMap() {
           handleLocationError(false, infoWindow, mapa.getCenter());
         }
 
-//var map=new google.maps.Map(document.getElementById("googleMap"),mapa);
-
+	//cria o marcado para mostrar
     marcador = new google.maps.Marker({
         map: mapa,
         draggable: true,
@@ -81,6 +79,7 @@ function myMap() {
         position: {lat: -3.1, lng: -60}
     });
 
+	//recupera os dados do marcador e adiciona os valores no campo do formulario
     marcador.addListener('click', toggleBounce);
 	marcador.addListener('position_changed', function(){
 		
@@ -88,6 +87,7 @@ function myMap() {
 		document.getElementById('usuario-longitude').value = marcador.getPosition().lng();
 	});
 
+	//adicionar uma search para o mapa quando clicar em outros pontos
     var input = document.getElementById('pac-input');
     var searchBox = new google.maps.places.SearchBox(input);
     mapa.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
@@ -117,7 +117,28 @@ function myMap() {
 
         mapa.fitBounds(bounds);
     });
+	
+	
+	//========
+	    infoWindow = new google.maps.InfoWindow;
+		infoWindow.open(mapa);
+
+ // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Localizacao nao encontrada.');
+            infoWindow.open(map);
+            map.setCenter(pos);
+		})};
+	//======
 }
+
 
 function geocodeAddress(address) {
 
